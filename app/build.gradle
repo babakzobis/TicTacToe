@@ -55,5 +55,7 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.mockito:mockito-inline:3.3.3'
+    //noinspection GradleDependency
+    testImplementation 'org.robolectric:robolectric:4.2.1' // 4.3.1 relies on java 9 which has troubles with Gradle for now
 }
 
