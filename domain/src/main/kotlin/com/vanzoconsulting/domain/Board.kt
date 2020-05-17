@@ -6,8 +6,10 @@ package com.vanzoconsulting.domain
  */
 data class Board(private val squares: Array<Player?> = Array(9) { null }) {
 
-    operator fun get(x: Int, y: Int): Player? = null
-    operator fun get(index: Int): Player? = null
+    private fun getIndex(x: Int, y: Int) = x + (y * 3)
+
+    operator fun get(x: Int, y: Int): Player? = squares[getIndex(x, y)]
+    operator fun get(index: Int) = squares[index]
 
     // generated
     override fun equals(other: Any?): Boolean {
@@ -24,5 +26,9 @@ data class Board(private val squares: Array<Player?> = Array(9) { null }) {
     // generated
     override fun hashCode(): Int {
         return squares.contentHashCode()
+    }
+
+    override fun toString(): String {
+        return squares.contentToString()
     }
 }
