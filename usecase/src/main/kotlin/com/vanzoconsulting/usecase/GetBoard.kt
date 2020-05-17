@@ -1,7 +1,7 @@
 package com.vanzoconsulting.usecase
 
-import com.vanzoconsulting.domain.Board
+import com.vanzoconsulting.persistence.BoardRepository
 
-class GetBoard() {
-    operator fun invoke(): Board? = null
+class GetBoard(private val repository: BoardRepository) {
+    operator fun invoke() = repository.loadBoard()
 }
