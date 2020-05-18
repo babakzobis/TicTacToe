@@ -57,5 +57,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.3.3'
     //noinspection GradleDependency
     testImplementation 'org.robolectric:robolectric:4.2.1' // 4.3.1 relies on java 9 which has troubles with Gradle for now
+    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }
-
