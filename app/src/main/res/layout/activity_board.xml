@@ -1,16 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.vanzoconsulting.tictactoe.ui.BoardLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:orientation="horizontal"
+    app:columnCount="3"
+    app:rowCount="3"
     tools:context=".ui.BoardActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/app_name" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="X" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="O" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="X" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="O" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="X" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="X" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="O" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="O" />
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/AppTheme.BoardCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="O" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.vanzoconsulting.tictactoe.ui.BoardLayout>
