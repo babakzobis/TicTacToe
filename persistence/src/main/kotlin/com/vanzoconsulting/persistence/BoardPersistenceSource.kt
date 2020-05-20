@@ -6,4 +6,5 @@ interface BoardPersistenceSource {
 
     fun loadBoard(): Board?
     fun saveBoard(board: Board): Boolean
+    fun deleteBoard(): Boolean
 }

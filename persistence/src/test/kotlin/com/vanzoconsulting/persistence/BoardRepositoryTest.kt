@@ -18,12 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class BoardRepositoryTest {
 
     @Spy
-    lateinit var boardPersistenceSource: BoardPersistenceSource
+    lateinit var persistenceSource: BoardPersistenceSource
 
     @InjectMocks
-    lateinit var boardRepository: BoardRepository
+    lateinit var repository: BoardRepository
 
-    private val board = Board(arrayOf(
+    private val boardFromSource = Board(arrayOf(
         X, O, X,
         O, X, O,
         X, O, X
@@ -35,21 +35,27 @@ internal class BoardRepositoryTest {
     }
 
     @Test
-    fun loadBoardExpectSubsequentCallToRepositorySource() {
-        `when`(boardPersistenceSource.loadBoard()).thenReturn(board)
+    fun loadBoardExpectSubsequentCallToRepositorySourceAndItsResult() {
+        `when`(persistenceSource.loadBoard()).thenReturn(boardFromSource)
 
-        assertEquals(board, boardRepository.loadBoard())
+        assertEquals(boardFromSource, repository.loadBoard())
     }
 
     @Test
-    fun saveBoardExpectSubsequentCallToRepositorySource() {
-        `when`(boardPersistenceSource.saveBoard(board)).thenReturn(true)
+    fun saveBoardExpectSubsequentCallToRepositorySourceAndItsResult() {
+        `when`(persistenceSource.saveBoard(boardFromSource)).thenReturn(SOURCE_POSITIVE_RESULT)
 
-        assertEquals(true, boardRepository.saveBoard(board))
+        assertEquals(SOURCE_POSITIVE_RESULT, repository.saveBoard(boardFromSource))
     }
 
     @Test
-    fun deleteBoardExpectTrue() {
-        assertTrue(boardRepository.deleteBoard())
+    fun deleteBoardExpectSubsequentCallToRepositorySourceAndItsResult() {
+        `when`(persistenceSource.deleteBoard()).thenReturn(SOURCE_POSITIVE_RESULT)
+
+        assertEquals(SOURCE_POSITIVE_RESULT, repository.deleteBoard())
+    }
+
+    companion object {
+        const val SOURCE_POSITIVE_RESULT = true
     }
 }

@@ -74,4 +74,9 @@ internal class SharedPrefsPersistenceSourceTest {
         verify(editor).putString(PREF_KEY_BOARD, board.toString())
         verify(editor).commit()
     }
+
+    @Test
+    fun deleteBoard() {
+        assertTrue(persistenceSource.deleteBoard())
+    }
 }
