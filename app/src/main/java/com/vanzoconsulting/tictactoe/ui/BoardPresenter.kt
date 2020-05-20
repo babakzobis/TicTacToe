@@ -18,10 +18,31 @@ class BoardPresenter(private val view: View?, private val getBoard: GetBoard,
         val board = withContext(dispatcherProvider.io()) {
             getBoard()
         }
+
+        view?.reset()
         view?.renderBoard(board ?: Board())
     }
 
     fun makeMove(board: Board, index: Int) {
+        board.mark(index).takeIf { it != board } ?.let { updatedBoard ->
+            view?.renderBoard(updatedBoard)
+
+            updatedBoard.winner?.let {
+                view?.showWinner(it)
+            }
+
+            if (updatedBoard.isDraw) {
+                view?.showDraw()
+            }
+
+            GlobalScope.launch(dispatcherProvider.io()) {
+                if (updatedBoard.isComplete()) {
+                    deleteBoard()
+                } else {
+                    saveBoard(updatedBoard)
+                }
+            }
+        }
     }
 
     interface View {

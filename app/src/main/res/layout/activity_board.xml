@@ -6,6 +6,8 @@
     android:id="@+id/container_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBoard"
+    android:animateLayoutChanges="true"
     tools:context=".ui.BoardActivity">
     <com.vanzoconsulting.tictactoe.ui.BoardLayout
         android:id="@+id/board_grid"
@@ -18,7 +20,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tv_message"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1">
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.BoardCell"
             tools:text="X" />
@@ -46,20 +49,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="80sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/board_grid"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="80sp"
+        android:fontFamily="sans-serif-black"
         tools:visibility="visible"
-        tools:text="XO\nDRAW!" />
+        tools:text="XO\nDRAW!"
+        tools:textColor="@color/colorPlayer" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_restart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_restart"
         android:contentDescription="@string/board_reset"
         android:layout_margin="16dp"
         android:onClick="onRestartClick"
+        app:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_restart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

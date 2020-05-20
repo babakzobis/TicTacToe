@@ -1,5 +1,6 @@
 package com.vanzoconsulting.tictactoe.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -9,13 +10,13 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.core.view.children
 import androidx.gridlayout.widget.GridLayout
-import com.vanzoconsulting.tictactoe.R
 
+@SuppressLint("ResourceType")
 class BoardLayout: GridLayout {
 
     private val paint = Paint(ANTI_ALIAS_FLAG).apply {
         style = STROKE
-        strokeWidth = 4.0f
+        strokeWidth = DEFAULT_DIVIDER_WIDTH
     }
 
     constructor(context: Context?) : super(context)
@@ -27,11 +28,13 @@ class BoardLayout: GridLayout {
     )
 
     init {
-        context.obtainStyledAttributes(TypedValue().data, intArrayOf(R.attr.colorPrimaryDark))
-            .apply {
-                paint.color = getColor(0, 0)
-            }
-            .recycle()
+        context.obtainStyledAttributes(TypedValue().data, intArrayOf(
+            android.R.attr.listDivider,
+            android.R.attr.dividerHeight
+        )).apply {
+            paint.color = getColor(0, 0)
+            paint.strokeWidth = getDimension(1, DEFAULT_DIVIDER_WIDTH)
+        } .recycle()
     }
 
     override fun dispatchDraw(c: Canvas?) {
@@ -59,6 +62,7 @@ class BoardLayout: GridLayout {
 
     companion object {
         const val ROW_COLUMN_COUNT = 3
+        const val DEFAULT_DIVIDER_WIDTH = 16.0f
     }
 
 }
