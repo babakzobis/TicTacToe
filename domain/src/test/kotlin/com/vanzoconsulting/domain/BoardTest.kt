@@ -7,6 +7,27 @@ import com.vanzoconsulting.domain.Player.O
 
 internal class BoardTest {
 
+    private val boardCompleteWithDraw = Board(arrayOf(
+        X, X, O,
+        O, O, X,
+        X, O, X
+    ))
+    private val boardCompleteWithXWinner = Board(arrayOf(
+        X, X, X,
+        O, X, null,
+        O, null, O
+    ))
+    private val boardCompleteWithOWinner = Board(arrayOf(
+        X, X, O,
+        X, O, null,
+        O, null, null
+    ))
+    private val boardIncomplete = Board(arrayOf(
+        X, null, null,
+        O, X, null,
+        null, null, O
+    ))
+
     @Test
     fun getWhenNullExpectNull() {
         assertEquals(null, Board()[1, 2])
@@ -51,23 +72,12 @@ internal class BoardTest {
 
     @Test
     fun getWinnerWhenBoardInProgressExpectNull() {
-        val board = Board(arrayOf(
-            X, null, null,
-            O, X, null,
-            null, null, O
-        ))
-        assertNull(board.winner)
+        assertNull(boardIncomplete.winner)
     }
 
     @Test
     fun getWinnerWhenXIsAlignedExpectX() {
-        val board = Board(arrayOf(
-            X, X, X,
-            O, X, null,
-            O, null, O
-        ))
-
-        assertEquals(X, board.winner)
+        assertEquals(X, boardCompleteWithXWinner.winner)
     }
 
     @Test
@@ -87,89 +97,72 @@ internal class BoardTest {
     }
 
     @Test
-    fun isDrawWhenBoardIsCompletedWithWinnerExpectFalse() {
-        val board = Board(arrayOf(
-            X, X, X,
-            O, X, null,
-            O, null, O
-        ))
-
-        assertFalse(board.isDraw)
+    fun isDrawWhenBoardIsCompleteWithWinnerExpectFalse() {
+        assertFalse(boardCompleteWithXWinner.isDraw)
     }
 
     @Test
-    fun isDrawWhenBoardIsCompletedWithoutWinnerExpectTrue() {
-        val board = Board(arrayOf(
-            X, O, X,
-            O, X, O,
-            X, O, X
-        ))
-
-        assertTrue(board.isDraw)
+    fun isDrawWhenBoardIsCompleteWithoutWinnerExpectTrue() {
+        assertTrue(boardCompleteWithDraw.isDraw)
     }
 
     @Test
-    fun markWhenBoardIsEmptyExpectCopyWithX() {
-        assertEquals(X, Board().mark(0)[0])
-    }
-
-    @Test
-    fun markWhenBoardHasStartedExpectCopyWithO() {
-        assertEquals(O, Board().mark(0).mark(1))
-    }
-
-    @Test
-    fun markWhenWinnerIsSetExpectCopyWithoutChange() {
-        val board = Board(arrayOf(
-            X, X, X,
-            O, O, null,
-            null, null, null
-        ))
-
-        assertEquals(board, board.mark(8))
-    }
-
-    @Test
-    fun markWhenBoardIsFullExpectCopyWithoutChange() {
-        val board = Board(arrayOf(
-            X, O, X,
-            O, X, O,
-            X, O, X
-        ))
-
-        assertEquals(board, board.mark(8))
-    }
-
-    @Test
-    fun isCompletedWhenBoardIsFullExpectTrue() {
-        val board = Board(arrayOf(
-            X, O, X,
-            O, X, O,
-            X, O, X
-        ))
-
-        assertTrue(board.isCompleted())
-    }
-
-    @Test
-    fun isCompletedWhenBoardHasAWinnerExpectTrue() {
-        val board = Board(arrayOf(
-            X, X, X,
-            O, O, null,
-            null, null, null
-        ))
-
-        assertTrue(board.isCompleted())
-    }
-
-    @Test
-    fun isCompletedWhenBoardHasCapacityWithNoWinnerExpectFalse() {
-        val board = Board(arrayOf(
+    fun markWhenBoardIsEmptyExpectCopyMovedByX() {
+        val expectedBoard = Board(arrayOf(
             X, null, null,
-            O, X, null,
-            null, null, O
+            null, null, null,
+            null, null, null
+        ))
+        val actualBoard = Board().mark(0)
+
+        assertEquals(expectedBoard, actualBoard)
+    }
+
+    @Test
+    fun markWhenBoardHasStartedExpectCopyMovedByO() {
+        val expectedBoard = Board(arrayOf(
+            X, O, null,
+            null, null, null,
+            null, null, null
+        ))
+        val actualBoard = Board().mark(0).mark(1)
+
+        assertEquals(expectedBoard, actualBoard)
+    }
+
+    @Test
+    fun markWhenBoardIsCompleteWithWinnerExpectExactCopy() {
+        val expectedBoard = boardCompleteWithOWinner
+        val actualBoard = expectedBoard.mark(8)
+
+        assertEquals(expectedBoard, actualBoard)
+    }
+    @Test
+    fun markWhenBoardIsCompleteWithDrawExpectExactCopy() {
+        val expectedBoard = boardCompleteWithDraw
+        val actualBoard = expectedBoard.mark(8)
+
+        assertEquals(expectedBoard, actualBoard)
+    }
+
+    @Test
+    fun isCompleteWhenBoardIsFullExpectTrue() {
+        val board = Board(arrayOf(
+            X, O, X,
+            O, X, O,
+            X, O, X
         ))
 
-        assertFalse(board.isCompleted())
+        assertTrue(board.isComplete())
+    }
+
+    @Test
+    fun isCompleteWhenBoardHasAWinnerExpectTrue() {
+        assertTrue(boardCompleteWithOWinner.isComplete())
+    }
+
+    @Test
+    fun isCompleteWhenBoardHasCapacityWithoutWinnerExpectFalse() {
+        assertFalse(boardIncomplete.isComplete())
     }
 }
