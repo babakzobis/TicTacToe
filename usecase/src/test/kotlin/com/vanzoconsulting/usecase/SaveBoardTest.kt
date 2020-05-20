@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.Spy
@@ -37,6 +38,8 @@ internal class SaveBoardTest {
             O, O, null,
             null, null, null
         ))
+
+        `when`(repository.saveBoard(board)).thenReturn(true)
 
         assertTrue(usecase(board))
 
