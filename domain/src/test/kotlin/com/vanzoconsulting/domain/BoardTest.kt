@@ -146,6 +146,14 @@ internal class BoardTest {
     }
 
     @Test
+    fun markWhenBoardIsAlreadyMarkedAtThatPositionExpectExactCopy() {
+        val initialBoard = boardIncomplete
+        val actualBoard = boardIncomplete.mark(0)
+
+        assertEquals(initialBoard, actualBoard)
+    }
+
+    @Test
     fun isCompleteWhenBoardIsFullExpectTrue() {
         val board = Board(arrayOf(
             X, O, X,

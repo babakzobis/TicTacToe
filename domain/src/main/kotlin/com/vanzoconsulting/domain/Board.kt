@@ -53,8 +53,10 @@ data class Board(private val squares: Array<Player?> = Array(9) { null }) {
     operator fun get(index: Int) = squares[index]
 
     fun mark(index: Int) = Board(squares.copyOf().also {
-        nextPlayer?.let { player ->
-            it[index] = player
+        if (get(index) == null) {
+            nextPlayer?.let { player ->
+                it[index] = player
+            }
         }
     })
 
