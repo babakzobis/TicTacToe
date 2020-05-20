@@ -47,4 +47,9 @@ internal class BoardRepositoryTest {
 
         assertEquals(true, boardRepository.saveBoard(board))
     }
+
+    @Test
+    fun deleteBoardExpectTrue() {
+        assertTrue(boardRepository.deleteBoard())
+    }
 }
