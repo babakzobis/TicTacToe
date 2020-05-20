@@ -77,6 +77,16 @@ internal class SharedPrefsPersistenceSourceTest {
 
     @Test
     fun deleteBoard() {
-        assertTrue(persistenceSource.deleteBoard())
+        val editor = mock(SharedPreferences.Editor::class.java)
+        `when`(editor.remove(anyString())).thenReturn(editor)
+        `when`(editor.commit()).thenReturn(true)
+
+        `when`(prefs.edit()).thenReturn(editor)
+
+        val deleted = persistenceSource.deleteBoard()
+
+        assertTrue(deleted)
+        verify(editor).remove(PREF_KEY_BOARD)
+        verify(editor).commit()
     }
 }

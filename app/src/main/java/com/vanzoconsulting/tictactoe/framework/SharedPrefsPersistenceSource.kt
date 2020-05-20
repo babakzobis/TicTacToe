@@ -21,7 +21,7 @@ class SharedPrefsPersistenceSource(private val prefs: SharedPreferences): BoardP
     override fun saveBoard(board: Board) =
         prefs.edit().putString(PREF_KEY_BOARD, board.toString()).commit()
 
-    override fun deleteBoard() = false
+    override fun deleteBoard() = prefs.edit().remove(PREF_KEY_BOARD).commit()
 
     companion object {
         const val PREF_KEY_BOARD = "board"
