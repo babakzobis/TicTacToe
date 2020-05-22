@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TicTacToe</string>
-    <string name="board_message_winner_o"><![CDATA[<p><strong><font color="#F2EBD4">O</font></strong></p><small>WINNER!</small>]]></string>
-    <string name="board_message_winner_x"><![CDATA[<p><strong><font color="#545454">X</font></strong></p><small>WINNER!</small>]]></string>
-    <string name="board_message_draw"><![CDATA[<p><strong><font color="#545454">X</font><font color="#F2EBD4">O</font></strong></p><small>DRAW!</small>]]></string>
+    <string name="board_message_winner_o"><![CDATA[<strong><font color="#F2EBD4">O</font></strong><br><small>WINNER!</small>]]></string>
+    <string name="board_message_winner_x"><![CDATA[<strong><font color="#545454">X</font></strong><br><small>WINNER!</small>]]></string>
+    <string name="board_message_draw"><![CDATA[<strong><font color="#545454">X</font><font color="#F2EBD4">O</font></strong><br><small>DRAW!</small>]]></string>
     <string name="board_reset">RESET</string>
 </resources>

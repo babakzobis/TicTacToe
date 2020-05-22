@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_message"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="H,1:1">
+        app:layout_constraintDimensionRatio="W,1:1">
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.BoardCell"
             tools:text="X" />
@@ -47,17 +47,17 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_message"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:gravity="center"
         android:textSize="80sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/board_grid"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fab_restart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeMaxTextSize="80sp"
-        android:fontFamily="sans-serif-black"
+        app:fontFamily="sans-serif-black"
         tools:visibility="visible"
         tools:text="XO\nDRAW!"
         tools:textColor="@color/colorPlayer" />
