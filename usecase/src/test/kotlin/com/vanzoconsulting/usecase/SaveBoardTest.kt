@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
@@ -32,7 +31,7 @@ internal class SaveBoardTest {
     }
 
     @Test
-    operator fun invoke() {
+    fun invokeExpectSubsequentCallToRepository() {
         val board = Board(arrayOf(
             X, X, X,
             O, O, null,
@@ -42,7 +41,5 @@ internal class SaveBoardTest {
         `when`(repository.saveBoard(board)).thenReturn(true)
 
         assertTrue(usecase(board))
-
-        verify(repository).saveBoard(board)
     }
 }

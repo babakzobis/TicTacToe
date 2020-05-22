@@ -1,20 +1,28 @@
 package com.vanzoconsulting.tictactoe.ui
 
 import com.vanzoconsulting.domain.Board
-import com.vanzoconsulting.domain.Player
+import com.vanzoconsulting.tictactoe.di.ActivityScoped
 import com.vanzoconsulting.tictactoe.dispatcher.DispatcherProvider
+import com.vanzoconsulting.tictactoe.ui.BoardContract.View
 import com.vanzoconsulting.usecase.DeleteBoard
 import com.vanzoconsulting.usecase.GetBoard
 import com.vanzoconsulting.usecase.SaveBoard
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BoardPresenter(private val view: View?, private val getBoard: GetBoard,
-                     private val saveBoard: SaveBoard, private val deleteBoard: DeleteBoard,
-                     private val dispatcherProvider: DispatcherProvider) {
+@ActivityScoped
+class BoardPresenter @Inject constructor(
+    private val getBoard: GetBoard,
+    private val saveBoard: SaveBoard,
+    private val deleteBoard: DeleteBoard,
+    private val dispatcherProvider: DispatcherProvider
+): BoardContract.Presenter {
 
-    fun onCreate() = GlobalScope.launch(dispatcherProvider.main()) {
+    override var view: View? = null
+
+    override fun loadBoard() = GlobalScope.launch(dispatcherProvider.main()) {
         val board = withContext(dispatcherProvider.io()) {
             getBoard()
         }
@@ -23,7 +31,7 @@ class BoardPresenter(private val view: View?, private val getBoard: GetBoard,
         view?.renderBoard(board ?: Board())
     }
 
-    fun makeMove(board: Board, index: Int) {
+    override fun makeMove(board: Board, index: Int) {
         board.mark(index).takeIf { it != board } ?.let { updatedBoard ->
             view?.renderBoard(updatedBoard)
 
@@ -43,12 +51,5 @@ class BoardPresenter(private val view: View?, private val getBoard: GetBoard,
                 }
             }
         }
-    }
-
-    interface View {
-        fun renderBoard(board: Board)
-        fun showWinner(player: Player)
-        fun showDraw()
-        fun reset()
     }
 }

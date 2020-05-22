@@ -127,7 +127,7 @@ internal class BoardActivityTest {
     fun onRestartClickExpectSubsequentCallToPresenter() {
         activity.fab_restart.performClick()
 
-        verify(presenter).onCreate()
+        verify(presenter).loadBoard()
     }
 
     fun resetExpectEmptyBoardAndResultMessageAndRestartButtonGone() {

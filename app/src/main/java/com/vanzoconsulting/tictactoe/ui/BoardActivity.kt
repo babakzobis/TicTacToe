@@ -1,6 +1,5 @@
 package com.vanzoconsulting.tictactoe.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
@@ -16,33 +15,24 @@ import com.vanzoconsulting.domain.Player
 import com.vanzoconsulting.domain.Player.O
 import com.vanzoconsulting.domain.Player.X
 import com.vanzoconsulting.domain.label
-import com.vanzoconsulting.persistence.BoardRepository
 import com.vanzoconsulting.tictactoe.R
-import com.vanzoconsulting.tictactoe.dispatcher.DefaultDispatcherProvider
-import com.vanzoconsulting.tictactoe.framework.SharedPrefsPersistenceSource
-import com.vanzoconsulting.usecase.DeleteBoard
-import com.vanzoconsulting.usecase.GetBoard
-import com.vanzoconsulting.usecase.SaveBoard
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_board.*
+import javax.inject.Inject
 
-class BoardActivity: AppCompatActivity(), BoardPresenter.View {
+class BoardActivity: DaggerAppCompatActivity(), BoardContract.View {
 
-    lateinit var presenter: BoardPresenter
+    @Inject
+    lateinit var presenter: BoardContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_board)
-
-        val sharedPrefsPersistenceSource = SharedPrefsPersistenceSource(
-            getSharedPreferences("board", MODE_PRIVATE)
-        )
-        val repository = BoardRepository(sharedPrefsPersistenceSource)
-        presenter = BoardPresenter(this, GetBoard(repository), SaveBoard(repository),
-            DeleteBoard(repository), DefaultDispatcherProvider())
-        presenter.onCreate()
-
         fab_restart.hide()
+
+        presenter.view = this
+        presenter.loadBoard()
     }
 
     override fun renderBoard(board: Board) {
@@ -84,12 +74,18 @@ class BoardActivity: AppCompatActivity(), BoardPresenter.View {
 
     @Suppress("UNUSED_PARAMETER")
     fun onRestartClick(v: View) {
-        presenter.onCreate()
+        presenter.loadBoard()
     }
 
     override fun reset() {
         fab_restart.hide()
         tv_message.visibility = GONE
         renderBoard(Board())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        presenter.view = null
     }
 }

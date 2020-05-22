@@ -22,7 +22,7 @@ internal class GetBoardTest {
     private val repository = BoardRepository(mock(BoardPersistenceSource::class.java))
 
     @InjectMocks
-    lateinit var usecase: GetBoard
+    private lateinit var usecase: GetBoard
 
     @BeforeEach
     fun setUp() {

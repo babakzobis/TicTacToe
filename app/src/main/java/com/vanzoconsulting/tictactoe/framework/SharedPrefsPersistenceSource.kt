@@ -4,8 +4,13 @@ import android.content.SharedPreferences
 import com.vanzoconsulting.domain.Board
 import com.vanzoconsulting.domain.Player.Companion.valueOf
 import com.vanzoconsulting.persistence.BoardPersistenceSource
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SharedPrefsPersistenceSource(private val prefs: SharedPreferences): BoardPersistenceSource {
+@Singleton
+class SharedPrefsPersistenceSource @Inject constructor(
+    private val prefs: SharedPreferences
+): BoardPersistenceSource {
 
     override fun loadBoard(): Board? =
         prefs.getString(PREF_KEY_BOARD, null)

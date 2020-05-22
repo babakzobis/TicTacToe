@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.Spy
@@ -30,11 +29,9 @@ internal class DeleteBoardTest {
     }
 
     @Test
-    operator fun invoke() {
+    fun invokeExpectSubsequentCallToRepository() {
         `when`(repository.deleteBoard()).thenReturn(true)
 
         assertTrue(usecase())
-
-        verify(repository).deleteBoard()
     }
 }

@@ -24,7 +24,7 @@ internal class BoardPresenterTest {
     var testRule = CoroutineTestRule()
 
     @Spy
-    private lateinit var view: BoardPresenter.View
+    private lateinit var view: BoardContract.View
 
     @Mock
     private lateinit var getBoard: GetBoard
@@ -40,12 +40,14 @@ internal class BoardPresenterTest {
     @Before
     fun setUp() {
         initMocks(this)
-        presenter = BoardPresenter(view, getBoard, saveBoard, deleteBoard,
-            testRule.testDispatcherProvider)
+
+        presenter = BoardPresenter(getBoard, saveBoard, deleteBoard, testRule.testDispatcherProvider).also {
+            it.view = view
+        }
     }
 
     @Test
-    fun onCreateExpectViewResetAndRendering() = testRule.testDispatcher.runBlockingTest {
+    fun loadBoardExpectViewResetAndRendering() = testRule.testDispatcher.runBlockingTest {
         val board = Board(arrayOf(
             X, O, X,
             O, X, O,
@@ -54,7 +56,7 @@ internal class BoardPresenterTest {
 
         `when`(getBoard()).thenReturn(board)
 
-        presenter.onCreate()
+        presenter.loadBoard()
 
         verify(view).reset()
         verify(view).renderBoard(board)
