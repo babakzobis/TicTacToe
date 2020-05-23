@@ -75,12 +75,12 @@ It retrieves data from the model and returns it to the view
 
 This layer encompasses mainly the actions that the user can trigger. Those can be active actions (the user clicks on a the board) or implicit actions (reloading the app thus recovering the existing session).
 
-The module's composition is straightforward:
-* 'DeleteBoard'
-* 'GetBoard'
-* 'SaveBoard'
+A set of use cases orchestrate the flow of data to and from the entities, and direct those entities to use their critical business rules to achieve the goals of the use case.
 
-These classes naming speak for themselves. We have the possibility
+In this context, it turns out that the module's composition is quite straightforward:
+* `DeleteBoard`
+* `GetBoard`
+* `SaveBoard`
 
 3. **Domain**
 
@@ -93,7 +93,7 @@ In our case of sampling, I kept the business models quiet simple:
 
 4. **Data**
 
-In this layer gives an abstract definition of the different data sources, and how they should be used.  
+This layer gives an abstract definition of the different data sources, and how they should be used.  
 You will normally use a repository pattern that is able to decide where to find the information for a given request.
 
 You would save your data locally and recover it from the network in a typical application. So this layer's component would check whether the data is in a local database and serve it or synchronize with a distant backend server through an API.  
@@ -101,12 +101,13 @@ But your data does not only come from a request. It might arise from the device 
 
 Let's get back to our elementary case and discover the following structure:
 * `BoardRepository` loading, saving and deleting game sessions.
-* `BoardPersistenceSource` providing the repository with a source of storage by abstracting the access to this source following the dependency inversion principle of [SOLI**D**](https://es.wikipedia.org/wiki/SOLID). So instead of depending on the specific implementation, we’re going to depend on an abstraction (an interface).
+* `BoardPersistenceSource` providing the repository with a source of storage by abstracting the access to this source following the dependency inversion principle of [SOLI**D**](https://es.wikipedia.org/wiki/SOLID). So instead of depending on the specific implementation, we’re going to depend on an abstraction (an interface).  
+So later the framwork layer will be able to provide us with an implementation.
 
 5. **Framework**
 
 Framework basically encapsulates the interaction with the framework, so that the rest of the code can be agnostic and reusable in another platform which is a real option with [Kotlin multi-platform](https://kotlinlang.org/docs/reference/multiplatform.html) projects!  
-Framework only refers to the Android framework in this case, but with further features involving external libraries, we can expand it in order to interact with those SDKs.
+Framework only refers to the Android framework in this case, but with further features involving external libraries, we can expand it in order to interact with those APIs.
 
 Remember that the data layer needs to persist the current game, so the framework layer will provide a `BoardPersistenceSource` concretization called `SharedPrefsPersistenceSource`, which as the name indicates it, supports data storage with [`SharedPreferences`](https://developer.android.com/training/data-storage/shared-preferences) API.  
 Our architecture allows us to amplify business entities persistence by providing a [Room](https://developer.android.com/topic/libraries/architecture/room) implementation for example. Or if it needs to do a request, we would use [Retrofit](https://square.github.io/retrofit/).
@@ -117,14 +118,18 @@ The presentation relies on the use cases layer, which will then use the data lay
 This would be a simple graph of the flow:  
 
 ![layers interactions](readme/clean-architecture-interaction.png)
+<p class="rich-diff-level-zero"><em class="rich-diff-level-one">Fig. 2: Layer interactions</em></p>
 
-The two edges of the flow depend on the [framework](#framework), using the Android dependency, while the rest of the layers only require Kotlin. Which helped me to divide each layer into a separate module thanks to Gradle's [multi-project builds](https://guides.gradle.org/creating-multi-project-builds/). If I was to reuse the same code for a Web App, I’d just need to reimplement the presentation and framework layers.
+The two edges of the flow depend on the framework, using the Android dependency, while the rest of the layers only require Kotlin. Which helped me to divide each layer into a separate module thanks to Gradle's [multi-project builds](https://guides.gradle.org/creating-multi-project-builds/). If I was to reuse the same code for a Web App, I’d just need to reimplement the presentation and framework layers.
 
 It's important to not mix the flow of the application with the direction of the dependencies between layers :
 
 <p class="rich-diff-level-zero" align="center">
-  <img width="400" height="400" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/clean-architecture-layers.png" alt="layers interactions" style="max-width:100%;">
-</p>
+  <img width="400" height="400" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/clean-architecture-layers.png" alt="layers dependencies" style="max-width:100%;">
+</p>  
+
+<p class="rich-diff-level-zero" align="center"><em class="rich-diff-level-one">Fig. 2: Layer dependencies</em></p>
+
 
 Our architecture stipulates that that the inner layers shouldn’t know about the outer ones. This indicates that an outer class can have an explicit dependency from an inner class, but not the other way round.
 The presentation layer has a Use Case dependency, and it’s able to call to start the flow. Then the Use Case has a dependency to the domain.
@@ -135,31 +140,31 @@ For simplification purposes, the presentation and framework layers form the `app
 
 Given the fact that this challenge is not about demonstrating the developer's sense of design nor the ability to integrate complex designs, I remained faithful to the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle) (keep it simple, stupid).
 
-You'll find the different visual states of the game in the screenshots below:
+You'll find the different visual states of the game in the screen shots below:
 | | | |
 |:-------------------------:|:-------------------------:|:-------------------------:|
-|<img width="241" height="429" alt="screen shot draw game" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_start.png"></br>Fig.3 - Game starts|<img width="241" height="429" alt="screen shot game in progress" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_progress.png"></br>Fig.4 - Game in progress|<img width="241" height="429" alt="screen shot game finishes with winner" src="https://github.com/2020-DEV-065/TicTacToe/blob/master/readme/screenshot_winner_x.png"></br>Fig.5 - X wins|
-| <img width="241" height="429" alt="screen shot game finishes with winner" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_winner_o.png"></br>Fig.6 - O wins|<img width="241" height="429" alt="screen shot of a draw" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_draw.png"></br>Fig.7 - Draw|
+|<img width="241" height="429" alt="screen shot draw game" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_start.png"></br><em class="rich-diff-level-one">Fig.3 - Game starts</em>|<img width="241" height="429" alt="screen shot game in progress" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_progress.png"></br><em class="rich-diff-level-one">Fig.4 - Game in progress</em>|<img width="241" height="429" alt="screen shot game finishes with winner" src="https://github.com/2020-DEV-065/TicTacToe/blob/master/readme/screenshot_winner_x.png"></br><em class="rich-diff-level-one">Fig.5 - X wins</em>|
+| <img width="241" height="429" alt="screen shot game finishes with winner" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_winner_o.png"></br><em class="rich-diff-level-one">Fig.6 - O wins</em>|<img width="241" height="429" alt="screen shot of a draw" src="https://raw.githubusercontent.com/2020-DEV-065/TicTacToe/master/readme/screenshot_draw.png"></br><em class="rich-diff-level-one">Fig.7 - Draw</em>|
 
 
 ## One step further
 
-Constrained by time limits, my current injury, the context of this development process resulting from a code kata and its scope which is not meant to evolve, I opted to leave out some of the aspects of my programming habits that I ususally apply in the enterprise World. 
+Constrained by time limits, my current injury, the context of this development process resulting from a code kata and its scope which is not meant to evolve, I opted to leave out some of the aspects of my programming habits that I ususally apply on a bigger scale. 
 
 Here is a non-exhaustive list of areas to improve:
-* **One model representation per layer**
+* **One model representation per layer**  
 I'd use data transformations to convert it through different layers. That makes layers less coupled, but also everything more complex.
 * [**Configuring dagger for each module**](https://developer.android.com/training/dependency-injection/dagger-multi-module)
-* **Adopting the behavior-driven development principle (BDD)**
+* **Adopting the behavior-driven development principle (BDD)**  
 It's an [Agile software development](https://en.wikipedia.org/wiki/Agile_software_development) process that encourages collaboration among developers, QA and non-technical or business participants in a software project.
 In parallel with TDD I usually make sure to maximize the test coverage following [The Testing Pyramid](https://developer.android.com/training/testing/fundamentals#write-tests) scheme.
-* **Keeping `git` history in accordance with user stories**  
-To demonstrate the respect of this code kata's main instruction (TDD), I committed every step of my development cycle relying on [code iterativity](https://developer.android.com/training/testing/fundamentals#create-test-iteratively) despite my desire for atomic commits, each entree of which must provide a working change.  
+* **Keeping `git` history in accordance with user stories as well as technical stories**  
+Following this code kata's main instruction (TDD), I committed every step of my development cycle relying on [code iterativity](https://developer.android.com/training/testing/fundamentals#create-test-iteratively) despite my desire for atomic commits, each entree of which must provide a working change.  
 Any roll back operation of the application to a state before the feature was added, shouldn't involve multiple commit entries, to avoid any confusion.  
 It's also preferable to squash a feature branch's commits as a whole before merging it to `master`.
 * **[Extend `Truth`](https://truth.dev/extension.html) assertions**  
 By writing reusable custom `Subject` for making tests more verbose and more readable.
-* [**Set up continuous integration**](https://developer.android.com/studio/projects/continuous-integration)
+* [**Set up continuous integration**](https://developer.android.com/studio/projects/continuous-integration)  
 This code kata requires focusing on writing the best code a developer can produce.  
 From the moment the additional features suggested in the following section, come into play, CI incorporation into the code repository becomes a must.
 This development practice consists of integrating code into a shared repository frequently, preferably several times a day. Each integration can then be verified by an automated build and automated tests. While automated testing is not strictly part of CI it is typically implied.
