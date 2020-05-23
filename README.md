@@ -118,7 +118,7 @@ The presentation relies on the use cases layer, which will then use the data lay
 This would be a simple graph of the flow:  
 
 ![layers interactions](readme/clean-architecture-interaction.png)
-<p class="rich-diff-level-zero"><em class="rich-diff-level-one">Fig. 2: Layer interactions</em></p>
+<p class="rich-diff-level-zero"><em class="rich-diff-level-one">Fig. 1: Layer interactions</em></p>
 
 The two edges of the flow depend on the framework, using the Android dependency, while the rest of the layers only require Kotlin. Which helped me to divide each layer into a separate module thanks to Gradle's [multi-project builds](https://guides.gradle.org/creating-multi-project-builds/). If I was to reuse the same code for a Web App, I’d just need to reimplement the presentation and framework layers.
 
