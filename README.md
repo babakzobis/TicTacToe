@@ -52,7 +52,7 @@ adb -s <serial of device> shell am start -n com.vanzoconsulting.tictactoe/com.va
 
 ## Architecture
 
-This small application's choice of conception showcases, with a very simple (but hopefully clear) a pragmatic and simplistic approach, Uncle Bob's Clean Architecture which is a craftsman's guide to software structure and design.
+This small application's choice of conception showcases with a very pragmatic, simplistic and hopefully clear approach, [Uncle Bob's Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) which is a craftsman's guide to software structure and design.
 Such an architecture allows decoupling different units of the code in an organized manner. That way the code gets easier to understand, modify, extend and test.
 
 The ultimate goal of any software architecture is to minimize the human resources required to build and maintain the required system.
@@ -64,12 +64,12 @@ But for clarity and simplicity, I'm sticking to 5 layers.
 
 1. **Presentation**
 
-Following the [MVP](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (Model View Presenter) pattern, it’s the layer that interacts with the UI consisting mostly of Android UI (activities, fragments, views) and presenters.
+Following the [MVP](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (Model View Presenter) pattern, it’s the layer that interacts with the UI consisting mostly of Android components (activities, fragments, views) and presenters.
 Due to the game's simplicity, the main structure is simple :
-* `BoardActivity` taking care of the pure UI part dictated by the Android framework
-* `BoardPresenter` respecting `BoardContract` being responsible to act as the middleman between view and model.  
-It retrieves data from the model and returns it to the view
-* `BoardLayout` extending Jetpack's [`GridLayout`](https://developer.android.com/jetpack/androidx/releases/gridlayout) in order to draw lines and columns divider for a better representation of Tic Tac Toe's Cartesian plan
+* [`BoardActivity`](app/src/main/java/com/vanzoconsulting/tictactoe/ui/BoardActivity.kt) taking care of the pure UI part dictated by the Android framework
+* [`BoardPresenter`](app/src/main/java/com/vanzoconsulting/tictactoe/ui/BoardPresenter.kt) respecting [`BoardContract`](app/src/main/java/com/vanzoconsulting/tictactoe/ui/BoardContract.kt) being responsible to act as the middleman between view and model.  
+It goes through different use cases returning data from the model for then incorporeting them into the view.
+* [`BoardLayout`](app/src/main/java/com/vanzoconsulting/tictactoe/ui/BoardLayout.kt) extending Jetpack's [`GridLayout`](https://developer.android.com/jetpack/androidx/releases/gridlayout) in order to draw lines and columns divider for a better representation of Tic Tac Toe's Cartesian plan
 
 2. **Use cases**
 
@@ -78,9 +78,9 @@ This layer encompasses mainly the actions that the user can trigger. Those can b
 A set of use cases orchestrate the flow of data to and from the entities, and direct those entities to use their critical business rules to achieve the goals of the use case.
 
 In this context, it turns out that the module's composition is quite straightforward:
-* `DeleteBoard`
-* `GetBoard`
-* `SaveBoard`
+* [`DeleteBoard`](usecase/src/main/kotlin/com/vanzoconsulting/usecase/DeleteBoard.kt)
+* [`GetBoard`](usecase/src/main/kotlin/com/vanzoconsulting/usecase/GetBoard.kt)
+* [`SaveBoard`](usecase/src/main/kotlin/com/vanzoconsulting/usecase/SaveBoard.kt)
 
 3. **Domain**
 
@@ -88,8 +88,8 @@ You'll find basically the business logic in this package, in other words, [the r
 Ideally, it should be the biggest layer, though Android Apps mostly tend to just draw an API in the screen of a phone, so most of the core logic will just consist of requesting and persisting data. 
 
 In our case of sampling, I kept the business models quiet simple:
-* `Player` symbolized by **X** or **O**.
-* `Board` upon which players mark their spots. The little magic behind this [`data class`](https://kotlinlang.org/docs/reference/data-classes.html) relies on a simple array of 9 indexes representing the board cells. Each cell's occupation is regulated by this class.
+* [`Player`](domain/src/main/kotlin/com/vanzoconsulting/domain/Player.kt) symbolized by **X** or **O**.
+* [`Board`](domain/src/main/kotlin/com/vanzoconsulting/domain/Board.kt) upon which players mark their spots. The little magic behind this [`data class`](https://kotlinlang.org/docs/reference/data-classes.html) relies on a simple array of 9 indexes representing the board cells. Each cell's occupation is regulated by this class.
 
 4. **Data**
 
@@ -97,7 +97,7 @@ This layer gives an abstract definition of the different data sources, and how t
 You will normally use a repository pattern that is able to decide where to find the information for a given request.
 
 You would save your data locally and recover it from the network in a typical application. So this layer's component would check whether the data is in a local database and serve it or synchronize with a distant backend server through an API.  
-But your data does not only come from a request. It might arise from the device sensors, or from a BroadcastReceiver even though the data layer should never know about this concept!
+But your data does not only come from a request. It might arise from the device sensors, or from a `BroadcastReceiver` even though the data layer should never know about this concept!
 
 Let's get back to our elementary case and discover the following structure:
 * `BoardRepository` loading, saving and deleting game sessions.
@@ -110,7 +110,7 @@ Framework basically encapsulates the interaction with the framework, so that the
 Framework only refers to the Android framework in this case, but with further features involving external libraries, we can expand it in order to interact with those APIs.
 
 Remember that the data layer needs to persist the current game, so the framework layer will provide a `BoardPersistenceSource` concretization called `SharedPrefsPersistenceSource`, which as the name indicates it, supports data storage with [`SharedPreferences`](https://developer.android.com/training/data-storage/shared-preferences) API.  
-Our architecture allows us to amplify business entities persistence by providing a [Room](https://developer.android.com/topic/libraries/architecture/room) implementation for example. Or if it needs to do a request, we would use [Retrofit](https://square.github.io/retrofit/).
+Our architecture allows us to amplify business entities persistence by providing a [Room](https://developer.android.com/topic/libraries/architecture/room) implementation for example. Or if the necessity arises to do a request, we would use [Retrofit](https://square.github.io/retrofit/).
 
 ### Interaction between layers
 The presentation relies on the use cases layer, which will then use the data layer to access the domain entities, which will finally use the framework to get access to the requested data. Then this data flies back to the layer structure until it reaches the presentation layer updating the UI. 
@@ -158,6 +158,7 @@ I'd use data transformations to convert it through different layers. That makes 
 * **Adopting the behavior-driven development principle (BDD)**  
 It's an [Agile software development](https://en.wikipedia.org/wiki/Agile_software_development) process that encourages collaboration among developers, QA and non-technical or business participants in a software project.
 In parallel with TDD I usually make sure to maximize the test coverage following [The Testing Pyramid](https://developer.android.com/training/testing/fundamentals#write-tests) scheme.
+[Frictionless Android testing](https://www.youtube.com/watch?v=wYMIadv9iF8)'s presentation held at Google I/O '18 is my go-to recipe.
 * **Keeping `git` history in accordance with user stories as well as technical stories**  
 Following this code kata's main instruction (TDD), I committed every step of my development cycle relying on [code iterativity](https://developer.android.com/training/testing/fundamentals#create-test-iteratively) despite my desire for atomic commits, each entree of which must provide a working change.  
 Any roll back operation of the application to a state before the feature was added, shouldn't involve multiple commit entries, to avoid any confusion.  
@@ -166,8 +167,9 @@ It's also preferable to squash a feature branch's commits as a whole before merg
 By writing reusable custom `Subject` for making tests more verbose and more readable.
 * [**Set up continuous integration**](https://developer.android.com/studio/projects/continuous-integration)  
 This code kata requires focusing on writing the best code a developer can produce.  
-From the moment the additional features suggested in the following section, come into play, CI incorporation into the code repository becomes a must.
-This development practice consists of integrating code into a shared repository frequently, preferably several times a day. Each integration can then be verified by an automated build and automated tests. While automated testing is not strictly part of CI it is typically implied.
+From the moment the additional features suggested in the following section, come into play, CI incorporation into the code repository becomes a must.  
+This development practice consists of integrating code into a shared repository frequently, preferably several times a day. Each integration can then be verified by an automated build and automated tests.  
+While automated testing is not strictly part of CI, it is typically implied.
 Most of the time I configure it in 4 stages:
   * test & [coverage](https://www.eclemma.org/jacoco/)
   * [quality](https://www.sonarqube.org/)
